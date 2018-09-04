@@ -21,7 +21,18 @@ def roll_dice(num_rolls, dice=six_sided):
     assert type(num_rolls) == int, 'num_rolls must be an integer.'
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
-    "*** YOUR CODE HERE ***"
+    hasOne = False
+    sum = 0
+    for i in range(num_rolls):
+        roll = dice()
+        if roll == 1:
+            hasOne = True
+        else:
+            sum += roll
+    if hasOne:
+        return 1
+    else:
+        return sum
     # END PROBLEM 1
 
 
@@ -32,7 +43,13 @@ def free_bacon(score):
     """
     assert score < 100, 'The game should be over.'
     # BEGIN PROBLEM 2
-    "*** YOUR CODE HERE ***"
+    ones = score%10
+    score //= 10
+    points = 2*score - ones
+    if points > 1:
+        return points
+    else:
+        return 1
     # END PROBLEM 2
 
 
@@ -50,7 +67,10 @@ def take_turn(num_rolls, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     assert opponent_score < 100, 'The game should be over.'
     # BEGIN PROBLEM 3
-    "*** YOUR CODE HERE ***"
+    if num_rolls == 0:
+        return free_bacon(opponent_score)
+    else:
+        return roll_dice(num_rolls, dice)
     # END PROBLEM 3
 
 
@@ -60,7 +80,11 @@ def is_swap(player_score, opponent_score):
     difference between its last two digits as the opponent's score.
     """
     # BEGIN PROBLEM 4
-    "*** YOUR CODE HERE ***"
+    player_score = player_score % 100
+    opponent_score = opponent_score % 100
+    if abs(player_score%10 - (player_score-player_score%10)/10) == abs(opponent_score%10 - (opponent_score-opponent_score%10)/10):
+        return True
+    return False
     # END PROBLEM 4
 
 
@@ -99,12 +123,20 @@ def play(strategy0, strategy1, score0=0, score1=0, dice=six_sided,
     """
     player = 0  # Which player is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 5
-    # (note that the indentation for the problem 6 prompt (***YOUR CODE HERE***) might be misleading)
-    # BEGIN PROBLEM 6
-    "*** YOUR CODE HERE ***"
-    # END PROBLEM 6
+    while score0 < goal and score1 < goal:
+        if player == 0:
+            num_rolls = strategy0(score0, score1)
+            score0 += take_turn(num_rolls, score1, dice)
+            say = say(score0, score1) # PROBLEM 6
+            player = 1
+        else:
+            num_rolls = strategy1(score1, score0)
+            score1 += take_turn(num_rolls, score0, dice)
+            say = say(score0, score1) #PROBLEM 6
+            player = 0
+        if is_swap(score0, score1):
+            score0, score1 = score1, score0
+
     return score0, score1
 
 
@@ -183,7 +215,26 @@ def announce_highest(who, previous_high=0, previous_score=0):
     """
     assert who == 0 or who == 1, 'The who argument should indicate a player.'
     # BEGIN PROBLEM 7
-    "*** YOUR CODE HERE ***"
+    def say(score0, score1):
+        previous_high_local = previous_high
+        diff = 0
+        previous_score_local = 0
+
+        if who == 0:
+            if score0 > previous_score:
+                diff = score0 - previous_score
+            previous_score_local = score0
+        if who == 1:
+            if score1 > previous_score:
+                diff = score1 - previous_score
+            previous_score_local = score1
+
+        if diff > previous_high_local:
+            previous_high_local = diff
+            print(diff, "point(s)! That's the biggest gain yet for Player", who)
+        
+        return announce_highest(who, previous_high_local, previous_score_local)
+    return say
     # END PROBLEM 7
 
 
