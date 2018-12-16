@@ -42,9 +42,11 @@ class Place(object):
                 self.ant = insect
             else:
                 # BEGIN Problem 9
-                if self.ant.is_container and self.ant.can_contain(insect):
+                #if self.ant.is_container and self.ant.can_contain(insect):
+                if self.ant.can_contain(insect):
                     self.ant.contain_ant(insect)
-                elif insect.is_container and insect.can_contain(self.ant):
+                #elif insect.is_container and insect.can_contain(self.ant):
+                elif insect.can_contain(self.ant):
                     insect.contain_ant(self.ant)
                     self.ant= insect
                 else:
@@ -236,7 +238,7 @@ class ThrowerAnt(Ant):
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 3 and 4
-        place_number=0;
+        place_number=0
         check_place= self.place.entrance
         if self.place.bees and self.min_range==0:
             return random_or_none(self.place.bees)
@@ -309,6 +311,7 @@ class FireAnt(Ant):
         """
         # BEGIN Problem 5
         self.armor= self.armor-amount
+        #Ant.reduce_armor(self, amount)
         if self.armor <=0:
             copy=self.place.bees[:]
             for bee in copy:
@@ -396,9 +399,10 @@ class BodyguardAnt(Ant):
 
     def can_contain(self, other):
         # BEGIN Problem 9
-        if self.contained_ant is None and not other.is_container:
-            return True
-        return False
+        #if self.contained_ant is None and not other.is_container:
+        #    return True
+        #return False
+        return self.contained_ant is None and not other.is_container
         # END Problem 9
 
     def contain_ant(self, ant):

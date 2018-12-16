@@ -19,7 +19,7 @@ def find_closest(location, centroids):
     [2.0, 3.0]
     """
     # BEGIN Question 3
-    return min(centroids, key = lambda x: distance(location,x))
+    return min(centroids, key = lambda centroid: distance(location,centroid))
     # END Question 3
 
 
@@ -157,9 +157,9 @@ def rate_all(user, restaurants, feature_fns):
     ratings = [predictor(restaurant) for restaurant in restaurants] 
     dictionary = {name: rating for name, rating in zip(names, ratings)}
 
-    userNames = [restaurant_name(restaurant) for restaurant in reviewed]
-    userRatings = [user_rating(user, restaurant) for restaurant in userNames]
-    userDictionary = {name: rating for name, rating in zip(userNames, userRatings)}
+    user_names = [restaurant_name(restaurant) for restaurant in reviewed]
+    userRatings = [user_rating(user, restaurant) for restaurant in user_names]
+    userDictionary = {name: rating for name, rating in zip(user_names, userRatings)}
     
     dictionary.update(userDictionary)
     
